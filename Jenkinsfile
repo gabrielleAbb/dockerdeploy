@@ -1,36 +1,21 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
-                echo 'Running build automation'
+                echo 'Building..'
             }
         }
-        stage('Build Docker Image') {
-            when {
-                branch 'master'
-            }
+        stage('Test') {
             steps {
-                script {
-                    app = docker.build("192474/train-schedule")
-                    app.inside {
-                        sh 'echo $(curl localhost:8080)'
-                    }
-                }
+                echo 'Testing..'
             }
         }
-        stage('Push Docker Image') {
-            when {
-                branch 'master'
-            }
+        stage('Deploy') {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
+                echo 'Deploying....'
             }
         }
-    }   
+    }
 }
